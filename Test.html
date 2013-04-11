@@ -1,0 +1,77 @@
+<!DOCTYPE html />
+<html>
+	<head>
+		<title>XBind.js Example Page</title>
+		<style type="text/css">
+			input {
+				margin-bottom: 15px;
+				border-radius: 5px;
+			}
+			a {
+				text-decoration: none;
+				background: #6699ee;
+				color: #eeeeee;
+				padding: 4px;
+				border: 1px solid #888888;
+				border-radius: 5px;
+			}
+
+			a:visited {
+	
+			}
+		</style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js" />
+		<script type="./XBind.js" type="text/javascript" />
+	</head>
+	<body>
+		<script type="text/javascript">
+			// Model
+			function person() {
+				var FName = "Nothing";
+				var LName = "Nothing";
+			}
+
+			var p = new person();
+			// Set the initial values
+			p.FName = 'Nate';
+			p.LName = 'Zaugg';
+
+			$(document).ready(function () {
+
+				// Click button event handler (Show Name)
+				$('#show').click(function () {
+					alert("Hello " + p.FName + " " + p.LName + "!");
+				});
+
+				// Click button event handler (Change Name)
+				$('#change').click(function () {
+					p.FName = "Joe";
+					p.LName = "McBride";
+				});
+
+				// New Object event handler
+				$('#newObj').click(function () {
+					unbind(p); // Be kind, unbind!
+					p = new person();
+					p.FName = "Bill";
+					p.LName = "Gates";
+					bind(p, "FName", $('#fname'), null,
+						function (element) { return $(element).val(); },
+						function (element, value) { $(element).val(value); });
+					bind(p, "LName", $('#lname').get(0));
+				});
+			});
+		</script>
+
+		<p>
+			<input id="fname" type=text placeholder="First Name" />
+			<input id="lname" type="text" placeholder="Last Name" />
+			<br />
+			<a id="show" href="#">Show Name</a>&nbsp;&nbsp;&nbsp;
+			<a id="change" href="#">Change Name</a>
+			<a id="newObj" href="#">Create New Object</a>
+		</p>
+	</body>
+</html>
+
+
