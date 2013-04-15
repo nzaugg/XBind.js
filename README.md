@@ -15,6 +15,9 @@ Features Include:
 
 ## Simple Example
 ```html
+	<script type="text/javascript" src="XBind.js"></script>
+```
+```html
 	<input id="fname" type=text placeholder="First Name" />
 	<input id="lname" type="text" placeholder="Last Name" />
 ```
@@ -52,6 +55,7 @@ no modifications. You can, however, override the default functions so that jQuer
 		return true;
 	};
 ```
+See example page for more details
 
 ## Support
 Should work with all modern browsers. Older instances of IE may require the Shim and/or Sham libraries -- even then it's untested.
