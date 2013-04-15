@@ -16,50 +16,109 @@
 				border-radius: 5px;
 			}
 
-			a:visited {
-	
+			a:visited {}
+
+			.error {
+				border: 1px solid red;
 			}
 		</style>
 		<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.js"></script>
 		<script type="text/javascript" src="XBind.js"></script>
 	</head>
 	<body>
+		<!--Basic Test-->
 		<script type="text/javascript">
-			alert("this shiz should be firing!");
-			// Model
+			// Model Type Definition
 			function person() {
-				var FName = "Nothing";
-				var LName = "Nothing";
+				var FName;
+				var LName;
+				var Color;
 			}
 
+			// Create a new Model and set the initial values
 			var p = new person();
-			// Set the initial values
 			p.FName = 'Nate';
 			p.LName = 'Zaugg';
+			p.Color = 2; // Green
 
+			// Data for our combobox
+			var colors = [];
+			colors.push({ name: "Blue", value: 0 });
+			colors.push({ name: "Black", value: 1 });
+			colors.push({ name: "Green", value: 2 });
+			colors.push({ name: "Orange", value: 3 });
+
+			// Document Ready (we have to wait for this function before we can work with UI elements)
 			$(document).ready(function () {
 
-				// Click button event handler (Show Name)
+				// Bind the dropdown options with jQuery
+				$.each(colors, function () {
+					$('#color').append($('<option></option>')
+						.attr("value", this.value)
+						.text(this.name));
+				});
+
+				// Bind the properties
+				p.bind({ prop: "FName", element: document.getElementById("fname") });
+				p.bind({ prop: "LName", element: document.getElementById("lname") });
+				p.bind({ prop: "Color", element: document.getElementById('color') });
+
+
+				// Show Name Click Handler: Demonstrates the model has actually changed along with the HTML Element
 				$('#show').click(function () {
-					alert("Hello " + p.FName + " " + p.LName + "!");
+					alert("Hello " + p.FName + " " + p.LName + " You have " + colors[p.Color].name + " clearance!");
 				});
 
-				// Click button event handler (Change Name)
+				// Change Name Click Hander: Demonstrates that you can change the model and the view will reflect the changes
 				$('#change').click(function () {
-					p.FName = "Joe";
-					p.LName = "McBride";
+					p.FName = "Steve";
+					p.LName = "Jobs";
+					p.Color = 1; // Black
 				});
 
-				// New Object event handler
+				// New Object Click Handler: This shows that you can unbind and also setup XBind to work with jQuery and Validation
 				$('#newObj').click(function () {
-					unbind(p); // Be kind, unbind!
+					p.unbind(); // Be kind, unbind!
 					p = new person();
 					p.FName = "Bill";
 					p.LName = "Gates";
-					bind(p, "FName", $('#fname'), null,
-						function (element) { return $(element).val(); },
-						function (element, value) { $(element).val(value); });
-					bind(p, "LName", $('#lname').get(0));
+					p.Color = 3; // Orange
+
+					// Use jQuery getters and setters / global override
+					xbind.defaultget = function (element) { return $(element).val(); };
+					xbind.defaultset = function (element, value) { $(element).val(value); };
+					xbind.defaultchange = function (element, handler) { $(element).change(handler); };
+					xbind.defaultunbindelement = function (element) { $(element).unbind('change'); };
+					xbind.defaultvalidate = function (element, oldvalue, newvalue) {
+						var valid = $(element).val().length > 0 && $(element)[0].checkValidity();
+						if (!valid) {
+							$(element).addClass('error');
+							$(element).attr('title', 'This is a required field!');
+						} else {
+							$(element).removeClass('error');
+							$(element).attr('title', '');
+						}
+						return true;
+					};
+
+					// Can specify the getters and setters per binding; also shows adding a validation function
+					// the first name and last name fields will have different validation behavior. The first name 
+					// will simply pop a message box and revert to the old value. The last name will add the 'error'
+					// class to the textbox and change the tooltip to an error message.
+					p.bind({
+						prop: "FName",
+						element: document.getElementById('fname'),
+						get: function (element) { return element.value; },
+						set: function (element, value) { element.value = value; },
+						validate: function (element, oldval, newval) {
+							var value = newval.length > 2;
+							if (!value)
+								alert("First Name must be at least 3 chars long!");
+							return value;
+						}
+					});
+					p.bind({ prop: "LName", element: $('#lname') });
+					p.bind({ prop: "Color", element: $('#color') });
 				});
 			});
 		</script>
@@ -67,6 +126,10 @@
 		<p>
 			<input id="fname" type=text placeholder="First Name" />
 			<input id="lname" type="text" placeholder="Last Name" />
+			<br />
+			<select id="color">
+			</select>
+			<br />
 			<br />
 			<a id="show" href="#">Show Name</a>&nbsp;&nbsp;&nbsp;
 			<a id="change" href="#">Change Name</a>
