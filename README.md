@@ -15,6 +15,10 @@ Features Include:
 
 ## Simple Example
 ```html
+	<input id="fname" type=text placeholder="First Name" />
+	<input id="lname" type="text" placeholder="Last Name" />
+```
+```JavaScript
 	// Model Type Definition
 	function person() {
 		var FName;
