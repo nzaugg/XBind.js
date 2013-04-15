@@ -1,4 +1,5 @@
 # XBind.js
+by Nate Zaugg (https://github.com/nzaugg)
 
 * Based on object.watch polyfill by Eli Gray, (http://eligray.com)
 * License: MIT/GPLv2
