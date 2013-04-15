@@ -14,7 +14,8 @@ Features Include:
 * Easy object-wide unbinding
 
 ## Simple Example
-```	// Model Type Definition
+```html
+	// Model Type Definition
 	function person() {
 		var FName;
 		var LName;
@@ -28,7 +29,8 @@ Features Include:
 jQuery does not pass actual DOM elements so we either have to use `$('#myobj').get(0)` or `$('#myobj')[0]` to work with 
 no modifications. You can, however, override the default functions so that jQuery can be used nativly, as shown below.
 
-```	// Use jQuery getters and setters / global override
+```JavaScript
+	// Use jQuery getters and setters / global override
 	xbind.defaultget = function (element) { return $(element).val(); };
 	xbind.defaultset = function (element, value) { $(element).val(value); };
 	xbind.defaultchange = function (element, handler) { $(element).change(handler); };
