@@ -29,6 +29,7 @@ Features Include:
 		var LName;
 	}
 
+	var p = new person();
 	p.bind({ prop: "FName", element: document.getElementById("fname") });
 	p.bind({ prop: "LName", element: document.getElementById("lname") });
 ```
